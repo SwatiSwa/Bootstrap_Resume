@@ -1,4 +1,4 @@
-(function(){
+(function(self){
     /**
  * Start CernerA11Y.js
  */
@@ -11,7 +11,7 @@ var mouseX   = 0;
 var mouseY   = 0;
 var screen   = "";
 
-createPopup = function (){
+self.createPopup = function (){
 	var popupDiv = document.createElement('div');
     popupDiv.id = "CernerA11Y-wrapper";
 	popupDiv.className = "showing-settings statusArea";
@@ -41,7 +41,7 @@ createPopup = function (){
 	closePopup();
 }
 
-function getResultProcessingHtml(){
+getResultProcessingHtml = function (){
 	return `
 			<div id="standards">
 				<h1>Processing Results from AXE</h1>
@@ -51,7 +51,7 @@ function getResultProcessingHtml(){
 			</div>`;
 }
 
-function showPopupStatus(result){
+showPopupStatus = function (result){
     if(!result){
         result = JSON.parse(sessionStorage.getItem('cernerA11YResult'));
     }
@@ -74,7 +74,7 @@ removePopup = function (){
 /*
     Function to create array of particular property
 */
-function pluck(array, propertyName) {
+pluck = function (array, propertyName) {
     var ret = [],
         i, ln, item;
 
@@ -90,7 +90,7 @@ function pluck(array, propertyName) {
 /**
  * Close Event
  */
-function closePopup(){
+closePopup = function (){
     var closeBtn = document.querySelectorAll('#CernerA11Y-wrapper #closeBtn');
 
     closeBtn.forEach(function (btn) {
@@ -101,7 +101,7 @@ function closePopup(){
 /**
  * Function to assign click event for Home Button
  */
-function navigateToHome(){
+navigateToHome = function (){
     var homeIcons = document.querySelectorAll('li i.fa.fa-home');
 
     homeIcons.forEach(function(home){
@@ -112,7 +112,7 @@ function navigateToHome(){
 /**
  * Function to navigate to status screen
  */
-function onClickHome(){
+onClickHome = function (){
     var statusArea  = document.querySelector('#CernerA11Y-wrapper.statusArea');
     var resultArea  = document.querySelector('#CernerA11Y-wrapper.resultArea');
     var summaryArea = document.querySelector('#CernerA11Y-wrapper.summaryArea');
@@ -129,7 +129,7 @@ function onClickHome(){
 
 
 
-function addDraggableListeners(screenType){
+addDraggableListeners = function (screenType){
     var targetElm = '.'+screenType+' .CernerA11Y-header';
 
     screen = screenType;
@@ -140,12 +140,12 @@ function addDraggableListeners(screenType){
 
 }
 
-function mouseUp(){
+mouseUp = function (){
     dragging = false;
     window.removeEventListener('mousemove', divMove, true);
 }
 
-function mouseDown(e){
+mouseDown = function (e){
     mouseX   = e.clientX;
     mouseY   = e.clientY;
     dragging = true;
@@ -153,7 +153,7 @@ function mouseDown(e){
     window.addEventListener('mousemove', divMove, true);
 }
 
-function divMove(e){
+divMove = function (e){
     var targetElm = '#CernerA11Y-wrapper.'+screen;
 
 	var div = document.querySelector(targetElm);
@@ -185,7 +185,7 @@ function divMove(e){
 	}
 }
 
-function testIframes(iframes,iframeResults){
+testIframes = function (iframes,iframeResults){
 	iframes.forEach(function(iframe,index){
 		var elements = iframe.contentDocument.body ? iframe.contentDocument.body.querySelectorAll('*') : [];
 
@@ -206,7 +206,7 @@ function testIframes(iframes,iframeResults){
 	});
 }
 
-function getConsolidatedResults(finalResult,iframeResults,standardSelected){
+getConsolidatedResults = function (finalResult,iframeResults,standardSelected){
 	standardSelected = standardSelected?standardSelected:null;
 
 		pluck(finalResult.violations,'nodes').forEach(function(node){
@@ -248,7 +248,7 @@ function getConsolidatedResults(finalResult,iframeResults,standardSelected){
 }
 
 
-function getIframeElements(elements){
+getIframeElements = function (elements){
 	var elementsClone = [];
 
 		elements.forEach(function(elem){
@@ -267,7 +267,7 @@ function getIframeElements(elements){
 	return elementsClone;
 }
 
-function getAllIframes(doc,iframes,iframeIndex){
+getAllIframes = function (doc,iframes,iframeIndex){
 	iframes = iframes?iframes:[];
 
 
@@ -323,7 +323,7 @@ function getAllIframes(doc,iframes,iframeIndex){
  /**
   * Start statusScreen.js
   */
-  function buildStatusArea(result,standardSelected) {
+  buildStatusArea = function (result,standardSelected) {
     sessionStorage.setItem('cernerA11YResult', JSON.stringify(result));
 
     var popupStatusDiv =document.querySelector('#CernerA11Y-wrapper.statusArea .CernerA11Y-settings');
@@ -334,7 +334,7 @@ function getAllIframes(doc,iframes,iframeIndex){
     setStatusAreaEvents();
 }
 
-function getStatusAreaHtml(result,standardSelected) {
+getStatusAreaHtml = function (result,standardSelected) {
     var violations = result.violations;
     var passes = result.passes;
     var incomplete = result.incomplete;
@@ -382,13 +382,13 @@ function getStatusAreaHtml(result,standardSelected) {
     `;
 }
 
-function setStatusAreaEvents() {
+setStatusAreaEvents = function () {
     onChangeStandards();
     showResult();
     navigateToHome();
 };
 
-function onChangeStandards(){
+onChangeStandards = function (){
     var a11yStandards = document.querySelector('.CernerA11Y-settings select');
 
     a11yStandards.onchange = function(e){
@@ -441,7 +441,7 @@ function onChangeStandards(){
         }
     }
 }
-function reRunA11AuditForUI(result,standardSelected){
+reRunA11AuditForUI = function (result,standardSelected){
     // var issuesBtn = document.querySelectorAll('#CernerA11Y-wrapper .CernerA11Y-settings .txt');
 
     // sessionStorage.setItem('cernerA11YResult', JSON.stringify(result));
@@ -451,7 +451,7 @@ function reRunA11AuditForUI(result,standardSelected){
     // issuesBtn[2] && (issuesBtn[2].innerText = ' Incomplete : ' + result.incomplete.length);
 }
 
-function showResult() {
+showResult = function () {
     var issueBtns = document.querySelectorAll('#CernerA11Y-wrapper .CernerA11Y-settings a');
 
     issueBtns.forEach(function(btn){
@@ -504,7 +504,7 @@ function showResult() {
  /**
   * Start resultScreen.js
   */
-  function buildResultArea(issueType,issues){
+  buildResultArea =  function (issueType,issues){
     var issueList = [];
   
     for(var i=0;i<issues.length;i++){
@@ -540,14 +540,14 @@ function showResult() {
   return resultHTML;
   }
   
-  function setResultAreaEvents(issueType){
+  setResultAreaEvents =  function (issueType){
     addDraggableListeners('resultArea');
     onClickViolations(issueType);
     closePopup();
     navigateToHome();
   }
 
-  function onClickViolations(issueType){
+  onClickViolations = function (issueType){
     var violationDiv = document.querySelectorAll('li.CernerA11Y-violation').forEach(function(violation){
         violation.setAttribute('issueType',issueType);
         violation.onmousedown = function(e,li){
@@ -602,7 +602,7 @@ function showResult() {
   * Start summaryScreen.js
   */
   var highlightedElement;
-  function buildSumaryArea(data, currentCount, total){
+  buildSumaryArea = function (data, currentCount, total){
       var issueType = sessionStorage.getItem('cernerA11Y-issueType');
   
       var summaryArea = `
@@ -647,7 +647,7 @@ function showResult() {
       return summaryArea;
   }
   
-  function setSummaryAreaEvents(selectedViolation, selectedIndex, total){
+  setSummaryAreaEvents = function (selectedViolation, selectedIndex, total){
       addDraggableListeners('summaryArea');
       onClickIssueArrowButton(selectedIndex,total);
       onClickTarget(selectedIndex);
@@ -657,7 +657,7 @@ function showResult() {
       navigateToHome();
   }
   
-  function onClickIssueArrowButton(selectedIndex,total){
+  onClickIssueArrowButton = function (selectedIndex,total){
       var previousBtn = document.getElementById('CernerA11Y-button-previous-issue');
       var nextBtn =  document.getElementById('CernerA11Y-button-next-issue');
   
@@ -698,7 +698,7 @@ function showResult() {
       }
   }
   
-  function enableDisableBtn(selectedIndex, total, type){
+  enableDisableBtn = function (selectedIndex, total, type){
       if(type == 'target'){
           var previousBtn = document.getElementById('CernerA11Y-button-previous-target');
           var nextBtn     = document.getElementById('CernerA11Y-button-next-target');
@@ -739,7 +739,7 @@ function showResult() {
       }
   }
   
-  function onClickTargetArrowButton (){
+  onClickTargetArrowButton = function  (){
       var previousTargetBtn = document.getElementById('CernerA11Y-button-previous-target');
       var nextTargetBtn     = document.getElementById('CernerA11Y-button-next-target');
   
@@ -780,7 +780,7 @@ function showResult() {
       }
   }
   
-  function getSelectedViolationSummary(selectedIndex){
+  getSelectedViolationSummary = function (selectedIndex){
     var issueType = sessionStorage.getItem('cernerA11Y-issueType');
     var issue = JSON.parse(sessionStorage.getItem('cernerA11YResult'))[issueType];
     var data = issue[selectedIndex-1];
@@ -836,7 +836,7 @@ function showResult() {
     return issueSummaryHtml;
   }
   
-  function getTargetList(nodes){
+  getTargetList = function (nodes){
     var targetList = pluck(nodes,'target');
     var targetListHtml;
   
@@ -852,7 +852,7 @@ function showResult() {
     return targetListHtml;
   }
   
-  function onClickTarget(selectedIndex){
+  onClickTarget = function (selectedIndex){
       var targetListItems = document.querySelectorAll('li.targetListItems');
   
       targetListItems.forEach(function(target,index){
@@ -910,7 +910,7 @@ function showResult() {
       });
   }
   
-  function locateTarget(e){
+  locateTarget = function (e){
       var target = e.currentTarget.getAttribute('target');
       var parentClass = e.currentTarget.getAttribute('parentClass');
   
@@ -977,7 +977,7 @@ function showResult() {
       }
   }
   
-  function navigateToResult(){
+  navigateToResult = function (){
       var violationBtn = document.getElementById('violationLink');
   
       if(violationBtn){
@@ -995,4 +995,4 @@ function showResult() {
    /**
   * End summaryScreen.js
   */
-})();
+})(this);
