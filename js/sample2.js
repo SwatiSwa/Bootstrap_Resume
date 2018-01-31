@@ -11,6 +11,16 @@ var mouseX   = 0;
 var mouseY   = 0;
 var screen   = "";
 
+runA11AuditForUI = function (results){
+	//var reportDetails = getReport(results);
+	sessionStorage.setItem('cernerA11YResult',null);
+	sessionStorage.setItem('cernerA11Y-issueType', null);
+
+	showPopupStatus(results);
+
+	//highlightViolations(reportDetails.reportDetailsList);
+}
+
 self.createPopup = function (){
 	var popupDiv = document.createElement('div');
     popupDiv.id = "CernerA11Y-wrapper";
