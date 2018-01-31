@@ -11,7 +11,7 @@ var mouseX   = 0;
 var mouseY   = 0;
 var screen   = "";
 
-function createPopup(){
+createPopup = function (){
 	var popupDiv = document.createElement('div');
     popupDiv.id = "CernerA11Y-wrapper";
 	popupDiv.className = "showing-settings statusArea";
@@ -61,7 +61,7 @@ function showPopupStatus(result){
 /*
     Function to remove popup on click of close button
 */
-function removePopup(){
+removePopup = function (){
     var oldPopUp = document.querySelectorAll('#CernerA11Y-wrapper');
 
      oldPopUp.forEach(function(area){
