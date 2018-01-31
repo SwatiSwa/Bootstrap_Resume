@@ -11,7 +11,7 @@ var mouseX   = 0;
 var mouseY   = 0;
 var screen   = "";
 
-runA11AuditForUI = function (results){
+runA11AuditForUI =function (results){
 	//var reportDetails = getReport(results);
 	sessionStorage.setItem('cernerA11YResult',null);
 	sessionStorage.setItem('cernerA11Y-issueType', null);
@@ -35,12 +35,7 @@ self.createPopup = function (){
     styles.href = 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
 	document.getElementsByTagName('head')[0].appendChild(styles);
 
-	var popupHeader = `<div class="CernerA11Y-header" title="Using standard WCAG2AA">CERNER A11Y
-							<div id="closeBtn" class="CernerA11Y-close" title="Close"> X </i></div>
-						</div>
-						<hr/>
-						<div id="" class="CernerA11Y-settings">
-						</div>`;
+	var popupHeader = '<div class="CernerA11Y-header" title="Using standard WCAG2AA">CERNER A11Y<div id="closeBtn" class="CernerA11Y-close" title="Close"> X </i></div></div><hr/><div id="" class="CernerA11Y-settings"></div>';
 	popupDiv.innerHTML = popupHeader; 
 
 	document.body.appendChild(popupDiv);
@@ -52,13 +47,7 @@ self.createPopup = function (){
 }
 
 getResultProcessingHtml = function (){
-	return `
-			<div id="standards">
-				<h1>Processing Results from AXE</h1>
-			</div>
-			<div class="issues">
-				<img src="https://media.giphy.com/media/fOTJAGGyXu3Je/source.gif" style="height:100px;width:150px;"  alt="Processing Image">
-			</div>`;
+	return '<div id="standards"><h1>Processing Results from AXE</h1></div><div class="issues"><img src="https://media.giphy.com/media/fOTJAGGyXu3Je/source.gif" style="height:100px;width:150px;" alt="Processing Image"></div>';
 }
 
 showPopupStatus = function (result){
@@ -349,47 +338,17 @@ getStatusAreaHtml = function (result,standardSelected) {
     var passes = result.passes;
     var incomplete = result.incomplete;
     var availableStandards = ['wcag2a','wcag2aa','section508','best-practice'];
-    var optionList=`<option value=select>-SELECT-</option>`;
+    var optionList='<option value=select>-SELECT-</option>';
 
     availableStandards.forEach(function(standard){
         if(standard == standardSelected){
-            optionList += `<option value=`+standard+`  selected>`+standard.toUpperCase()+`</option>`;
+            optionList += '<option value='+standard+'  selected>'+standard.toUpperCase()+'</option>';
         }else{
-            optionList += `<option value=`+standard+`>`+standard.toUpperCase()+`</option>`;
+            optionList += '<option value='+standard+'>'+standard.toUpperCase()+'</option>';
         }
     });
 
-    return `
-        <div id="" class="CernerA11Y-settings">
-            <div id="standards">
-                <select name="" id="selectStandard">`+
-                    optionList
-                +`</select>
-            </div>
-            <div class="issues">
-                <div id="violations">
-                    <a class="btn violationBtn">
-                    <span class="txt"> Violations : `+violations.length+`</span>
-                    <span class="round"><i class="fa fa-chevron-right"></i></span>
-                    </a>
-                </div>
-
-                <div id="passes">
-                    <a class="btn passesBtn">
-                    <span class="txt">Passes : `+passes.length+` </span>
-                    <span class="round"><i class="fa fa-chevron-right"></i></span>
-                    </a>
-                </div>
-
-                <div id="incomplete">
-                    <a class="btn incompleteBtn">
-                    <span class="txt"> Incomplete : `+incomplete.length+`</span>
-                    <span class="round"><i class="fa fa-chevron-right"></i></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    `;
+    return '<div id="" class="CernerA11Y-settings"> <div id="standards"> <select name="" id="selectStandard">'+ optionList +'</select> </div><div class="issues"> <div id="violations"> <a class="btn violationBtn"> <span class="txt"> Violations : '+violations.length+'</span> <span class="round"><i class="fa fa-chevron-right"></i></span> </a> </div><div id="passes"> <a class="btn passesBtn"> <span class="txt">Passes : '+passes.length+' </span> <span class="round"><i class="fa fa-chevron-right"></i></span> </a> </div><div id="incomplete"> <a class="btn incompleteBtn"> <span class="txt"> Incomplete : '+incomplete.length+'</span> <span class="round"><i class="fa fa-chevron-right"></i></span> </a> </div></div></div>';
 }
 
 setStatusAreaEvents = function () {
@@ -518,33 +477,12 @@ showResult = function () {
     var issueList = [];
   
     for(var i=0;i<issues.length;i++){
-      var liHtml = `<li id="CernerA11Y-msg-`+i+1+`" class="CernerA11Y-violation"><span class="CernerA11Y-issue-type CernerA11Y-result" title="Error"><i class="fa fa-exclamation-circle fa-5x" style="padding-left: 20%;">`+"  "+(i+1)+"  "+`</i></span><span class="CernerA11Y-issue-title">`+issues[i].description.replace(/[<>]/g,"")+`</span></li>`;
+      var liHtml = '<li id="CernerA11Y-msg-'+i+1+'" class="CernerA11Y-violation"><span class="CernerA11Y-issue-type CernerA11Y-result" title="Error"><i class="fa fa-exclamation-circle fa-5x" style="padding-left: 20%;">'+"  "+(i+1)+"  "+'</i></span><span class="CernerA11Y-issue-title">'+issues[i].description.replace(/[<>]/g,"")+'</span></li>';
     
       issueList.push(liHtml);
     }
   
-    var resultHTML = `<div class="CernerA11Y-header" title="Using standard WCAG2AA">CERNER A11Y
-      <div id="closeBtn" class="CernerA11Y-close" title="Close"> X </div>
-    </div>
-  
-    <div class="CernerA11Y-summary">
-       <div class="CernerA11Y-summary-left">
-          <ol class="CernerA11Y-list">
-             <li class="CernerA11Y-list-item clickableItem"><i class="fa fa-home fa-5x"></i><span>Home</span></a></li>
-             <li class="CernerA11Y-list-item"><strong>`+issues.length+`</strong>`+" : " + issueType.toUpperCase() +`</li>
-          </ol>
-       </div>
-       <div class="CernerA11Y-summary-right">&nbsp;</div>
-    </div>
-    <div class="CernerA11Y-outer-wrapper">
-       <div id="CernerA11Y-issues-wrapper" class="CernerA11Y-inner-wrapper">
-          <div id="CernerA11Y-issues" class="CernerA11Y-details">
-             <ol class="CernerA11Y-issue-list" style="margin-left: 0; list-style-type: decimal;">`
-             + issueList +
-             `</ol>
-          </div>
-       </div>
-    </div>`;
+    var resultHTML = '<div class="CernerA11Y-header" title="Using standard WCAG2AA">CERNER A11Y <div id="closeBtn" class="CernerA11Y-close" title="Close"> X </div></div><div class="CernerA11Y-summary"> <div class="CernerA11Y-summary-left"> <ol class="CernerA11Y-list"> <li class="CernerA11Y-list-item clickableItem"><i class="fa fa-home fa-5x"></i><span>Home</span></a></li><li class="CernerA11Y-list-item"><strong>'+issues.length+'</strong>'+" : " + issueType.toUpperCase() +'</li></ol> </div><div class="CernerA11Y-summary-right">&nbsp;</div></div><div class="CernerA11Y-outer-wrapper"> <div id="CernerA11Y-issues-wrapper" class="CernerA11Y-inner-wrapper"> <div id="CernerA11Y-issues" class="CernerA11Y-details"> <ol class="CernerA11Y-issue-list" style="margin-left: 0; list-style-type: decimal;">' + issueList + '</ol> </div></div></div>';
   
   
   return resultHTML;
@@ -615,44 +553,8 @@ showResult = function () {
   buildSumaryArea = function (data, currentCount, total){
       var issueType = sessionStorage.getItem('cernerA11Y-issueType');
   
-      var summaryArea = `
-          <div class="CernerA11Y-header" title="Cerner A11Y">Cerner A11Y
-              <div id="closeBtn" class="CernerA11Y-close" title="Close"> X </div> 
-          </div>
-          <div class="CernerA11Y-summary-detail" style="display: block;">
-              <div class="CernerA11Y-summary-left">
-                  <ol class="CernerA11Y-list clickableItem">
-                      <li class="CernerA11Y-list-item">
-                            <i class="fa fa-home fa-5x"></i>
-                            <span>Home</span>
-                      </li>
-                      <li id="violationLink" class="CernerA11Y-list-item clickableItem">
-                            <i class="fa fa-file-text fa-5x"></i>
-                            <span>`+ issueType.toUpperCase() +`</span>
-                      </li>
-                      <li id="displayCount" class="CernerA11Y-list-item">Showing `+ (Number(currentCount)) +` of `+ total +`</li>
-                  </ol>
-              </div>
-              <div class="CernerA11Y-summary-right">
-                  <div class="CernerA11Y-button-group">
-                      <div id="CernerA11Y-button-previous-issue" class="CernerA11Y-button" title="Previous Issue">
-                          <span class="CernerA11Y-button-icon"><i class="fa fa-arrow-circle-left fa-5x"></i></span>&nbsp;
-                      </div>
-                      <div id="CernerA11Y-button-next-issue" class="CernerA11Y-button" title="Next Issue">
-                          <span class="CernerA11Y-button-icon"><i class="fa fa-arrow-circle-right fa-5x"></i></span>&nbsp;
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="CernerA11Y-outer-wrapper" style="overflow: auto;height: 90%;">
-                  <div id="CernerA11Y-issues-detail" class="CernerA11Y-details" style="overflow:visible;">
-                      <ol class="CernerA11Y-issue-detail-list" style="margin-left: 0;list-style-type: decimal;">
-                          <li id="CernerA11Y-violation-summary" class=" CernerA11Y-current" style="margin-left: 0px;">`+
-                              getSelectedViolationSummary(currentCount,total)
-                          +`</li>
-                      </ol>
-                  </div>
-          </div>`;
+      var summaryArea = '<div class="CernerA11Y-header" title="Cerner A11Y">Cerner A11Y <div id="closeBtn" class="CernerA11Y-close" title="Close"> X </div></div><div class="CernerA11Y-summary-detail" style="display: block;"> <div class="CernerA11Y-summary-left"> <ol class="CernerA11Y-list clickableItem"> <li class="CernerA11Y-list-item"> <i class="fa fa-home fa-5x"></i> <span>Home</span> </li><li id="violationLink" class="CernerA11Y-list-item clickableItem"> <i class="fa fa-file-text fa-5x"></i> <span>'+ issueType.toUpperCase() +'</span> </li><li id="displayCount" class="CernerA11Y-list-item">Showing '+ (Number(currentCount)) +' of '+ total +'</li></ol> </div><div class="CernerA11Y-summary-right"> <div class="CernerA11Y-button-group"> <div id="CernerA11Y-button-previous-issue" class="CernerA11Y-button" title="Previous Issue"> <span class="CernerA11Y-button-icon"><i class="fa fa-arrow-circle-left fa-5x"></i></span>&nbsp; </div>'+
+      '<div id="CernerA11Y-button-next-issue" class="CernerA11Y-button" title="Next Issue"> <span class="CernerA11Y-button-icon"><i class="fa fa-arrow-circle-right fa-5x"></i></span>&nbsp; </div></div></div></div><div class="CernerA11Y-outer-wrapper" style="overflow: auto;height: 90%;"> <div id="CernerA11Y-issues-detail" class="CernerA11Y-details" style="overflow:visible;"> <ol class="CernerA11Y-issue-detail-list" style="margin-left: 0;list-style-type: decimal;"> <li id="CernerA11Y-violation-summary" class=" CernerA11Y-current" style="margin-left: 0px;">'+ getSelectedViolationSummary(currentCount,total) +'</li></ol> </div></div>';
   
       return summaryArea;
   }
@@ -795,53 +697,8 @@ showResult = function () {
     var issue = JSON.parse(sessionStorage.getItem('cernerA11YResult'))[issueType];
     var data = issue[selectedIndex-1];
   
-    var issueSummaryHtml = `<div class="CernerA11Y-issue-details">
-            <div class="CernerA11Y-issue-title CernerA11Y-issue-wcag-ref" style="margin:10px;">
-            <em>Description:</em><span style="color:black;">`
-            +data.description.replace(/[<>]/g,"")+
-            `</span></div>
-            <div class="CernerA11Y-issue-wcag-ref" style="margin:10px;">
-                <em>Help:</em>
-                <span style="color:black;">`+data.help.replace(/[<>]/g,"")+`</span>
-                <br>
-                <em>Help URL:</em>
-                <a href=`+data.helpUrl.replace(/[<>]/g,"")+` target="_blank" style="color:black;">`+data.helpUrl+`H25</a>
-                <br>
-            </div>
-        </div>
-        <div id="violation-summary-details" class="CernerA11Y-issue-source CernerA11Y-issue-wcag-ref" style="margin:10px;">
-            <div class="CernerA11Y-issue-source-inner-u2p targetDisplayArea">
-                    <div class="CernerA11Y-issue-source-header">
-                        <strong>Target List</strong>
-                    </div><br/>
-                <ol style="margin-left:7%; list-style-type: decimal;">`
-                +getTargetList(data.nodes)+
-                `</ol>
-                <div id="targetLocator" class="CernerA11Y-issue-source" style="display:none;">
-                      <div class="CernerA11Y-issue-source">
-                      <div class="CernerA11Y-issue-source-header" style="height:10px;">
-                          <strong>Code Snippet</strong>
-                          <div class="CernerA11Y-summary-right">
-                              <div class="CernerA11Y-button-group">
-                                  <div id="CernerA11Y-button-previous-target" class="CernerA11Y-button" title="Previous Target">
-                                      <span class="CernerA11Y-button-icon"><i class="fa fa-arrow-circle-left fa-5x"></i></span>&nbsp;
-                                  </div>
-                                  <div id="CernerA11Y-button-next-target" class="CernerA11Y-button" title="Next Target">
-                                      <span class="CernerA11Y-button-icon"><i class="fa fa-arrow-circle-right fa-5x"></i></span>&nbsp;
-                                  </div>
-                              </div>
-                          </div>
-                      </div><br/>
-                      <div class="CernerA11Y-issue-source-inner">
-                          <span><i class="fa fa-thumb-tack fa-5x locator" style="cursor:pointer;"></i></span>
-                          <strong>
-                              Html of selected Target
-                          </strong>
-                      </div>
-                  </div>
-                </div>
-            </div>
-        </div>`;
+    var issueSummaryHtml = '<div class="CernerA11Y-issue-details"> <div class="CernerA11Y-issue-title CernerA11Y-issue-wcag-ref" style="margin:10px;"> <em>Description:</em><span style="color:black;">' +data.description.replace(/[<>]/g,"")+ '</span></div><div class="CernerA11Y-issue-wcag-ref" style="margin:10px;"> <em>Help:</em> <span style="color:black;">'+data.help.replace(/[<>]/g,"")+'</span> <br><em>Help URL:</em> <a href='+data.helpUrl.replace(/[<>]/g,"")+' target="_blank" style="color:black;">'+data.helpUrl+'H25</a> <br></div></div><div id="violation-summary-details" class="CernerA11Y-issue-source CernerA11Y-issue-wcag-ref" style="margin:10px;"> <div class="CernerA11Y-issue-source-inner-u2p targetDisplayArea"> <div class="CernerA11Y-issue-source-header"> <strong>Target List</strong> </div><br/> <ol style="margin-left:7%; list-style-type: decimal;">' +getTargetList(data.nodes)+
+    '</ol> <div id="targetLocator" class="CernerA11Y-issue-source" style="display:none;"> <div class="CernerA11Y-issue-source"> <div class="CernerA11Y-issue-source-header" style="height:10px;"> <strong>Code Snippet</strong> <div class="CernerA11Y-summary-right"> <div class="CernerA11Y-button-group"> <div id="CernerA11Y-button-previous-target" class="CernerA11Y-button" title="Previous Target"> <span class="CernerA11Y-button-icon"><i class="fa fa-arrow-circle-left fa-5x"></i></span>&nbsp; </div><div id="CernerA11Y-button-next-target" class="CernerA11Y-button" title="Next Target"> <span class="CernerA11Y-button-icon"><i class="fa fa-arrow-circle-right fa-5x"></i></span>&nbsp; </div></div></div></div><br/> <div class="CernerA11Y-issue-source-inner"> <span><i class="fa fa-thumb-tack fa-5x locator" style="cursor:pointer;"></i></span> <strong> Html of selected Target </strong> </div></div></div></div></div>';
   
     return issueSummaryHtml;
   }
@@ -852,10 +709,10 @@ showResult = function () {
   
     for(var i=0;i<targetList.length;i++){
         if(targetListHtml){
-            targetListHtml += (`<li class="targetListItems" style="list-style: unset;">`+(targetList[i])[0]+`</li>`);
+            targetListHtml += ('<li class="targetListItems" style="list-style: unset;">'+(targetList[i])[0]+'</li>');
         }
         else{
-          targetListHtml = `<li class="targetListItems" style="list-style: unset;">`+(targetList[i])[0]+`</li>`;
+          targetListHtml = '<li class="targetListItems" style="list-style: unset;">'+(targetList[i])[0]+'</li>';
         }
     }
   
