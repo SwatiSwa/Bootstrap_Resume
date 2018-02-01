@@ -501,7 +501,7 @@ showResult = function () {
     for(var i=0;i<violationDiv.length;i++){
         violationDiv[i].setAttribute('issueType',issueType);
         violationDiv[i].onmousedown = function(e,li){
-            var issueType = violationDiv[i].getAttribute('issueType');
+            var issueType = e.currentTarget.getAttribute('issueType');
             var issue = JSON.parse(sessionStorage.getItem('cernerA11YResult'))[issueType];
             var issueIndex = Number(e.currentTarget.getAttribute('index'));
             var data = issue[issueIndex];
