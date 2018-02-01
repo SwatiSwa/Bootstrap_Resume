@@ -577,15 +577,11 @@
             }
           }
           resolveNode();
-        }).catch(function(err) {
-          return rejectNode(err);
         });
       });
     });
     q.then(function() {
       return resolve(ruleResult);
-    }).catch(function(error) {
-      return reject(error);
     });
   };
   function findAfterChecks(rule) {
