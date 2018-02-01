@@ -193,8 +193,6 @@ testIframes = function (iframes,iframeResults){
 				axe.a11yCheck(elements,{
 					exclude: [['#CernerA11Y-wrapper']]
 					},function(res){
-                        document ? document.body.scrollIntoView() : null;
-
 						var distinctClassName = "cernera11y-iframe"+iframes[i].parentIndex;
 						iframes[i].className += ((iframes[i].className!="")?(" "+distinctClassName):"");
 						res.distinctClassName = distinctClassName;
@@ -332,6 +330,7 @@ getAllIframes = function (doc,iframes,iframeIndex){
     /* Update result in the Popup */
     popupStatusDiv.innerHTML = getStatusAreaHtml(result,standardSelected);
 
+    document.body.scrollIntoView();
     setStatusAreaEvents();
 }
 
@@ -386,8 +385,6 @@ onChangeStandards = function (){
                         values: [standardSelected]
                       }
                 },function(res){
-                  document ? document.body.scrollIntoView() : null;
-
                   finalResult = res;
                   console.log('documentResult : '+JSON.stringify(res.violations));
       
@@ -408,8 +405,6 @@ onChangeStandards = function (){
                         values: [standardSelected]
                       }
                 },function(result){
-                    document ? document.body.scrollIntoView() : null;
-                    
                     buildStatusArea(result,standardSelected);
                 });
             }
