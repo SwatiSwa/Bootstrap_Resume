@@ -63,11 +63,11 @@ showPopupStatus = function (result){
 removePopup = function (){
     var oldPopUp = document.querySelectorAll('#CernerA11Y-wrapper');
 
-     oldPopUp.forEach(function(area){
-        var parentElement = area.parentElement;
+    for(var i=0;i<oldPopUp.length;i++){
+        var parentElement = oldPopUp[i].parentElement;
 
-        parentElement.removeChild(area);
-     });
+        parentElement.removeChild(oldPopUp[i]);
+    }
 }
 
 /*
@@ -92,9 +92,9 @@ pluck = function (array, propertyName) {
 closePopup = function (){
     var closeBtn = document.querySelectorAll('#CernerA11Y-wrapper #closeBtn');
 
-    closeBtn.forEach(function (btn) {
-        btn.onmousedown = removePopup;
-    });
+    for(var i=0;i<closeBtn.length;i++){
+        closeBtn[i].onmousedown = removePopup;
+    }
 }
 
 /**
@@ -103,9 +103,9 @@ closePopup = function (){
 navigateToHome = function (){
     var homeIcons = document.querySelectorAll('li i.fa.fa-home');
 
-    homeIcons.forEach(function(home){
-        home.onmousedown = onClickHome;
-    });
+    for(var i=0;i<homeIcons.length;i++){
+        homeIcons[i].onmousedown = onClickHome;
+    }
 }
 
 /**
@@ -185,53 +185,55 @@ divMove = function (e){
 }
 
 testIframes = function (iframes,iframeResults){
-	iframes.forEach(function(iframe,index){
-		var elements = iframe.contentDocument.body ? iframe.contentDocument.body.querySelectorAll('*') : [];
+    for(var i=0;i<iframes.length;i++){
+        var elements = iframes[i].contentDocument.body ? iframes[i].contentDocument.body.querySelectorAll('*') : [];
 
 		if(elements.length){
 			elements = getIframeElements(elements);
 				axe.a11yCheck(elements,{
 					exclude: [['#CernerA11Y-wrapper']]
 					},function(res){
-						let distinctClassName = "cernera11y-iframe"+iframe.parentIndex;
-						iframe.className += ((iframe.className!="")?(" "+distinctClassName):"");
+						let distinctClassName = "cernera11y-iframe"+iframes[i].parentIndex;
+						iframes[i].className += ((iframes[i].className!="")?(" "+distinctClassName):"");
 						res.distinctClassName = distinctClassName;
 						iframeResults.push(res);
 						
-						console.log('Tested Iframe : ',iframe);
-						console.log('iframeResults :'+index+ ": " +JSON.stringify(res.violations));
+						console.log('Tested Iframe : ',iframes[i]);
+						console.log('iframeResults :'+i+ ": " +JSON.stringify(res.violations));
 					});
 			}
-	});
+    }
 }
 
 getConsolidatedResults = function (finalResult,iframeResults,standardSelected){
-	standardSelected = standardSelected?standardSelected:null;
+    standardSelected = standardSelected?standardSelected:null;
+    var finalResultNodes = pluck(finalResult.violations,'nodes');
+    
+        for(var i=0;i<finalResultNodes.length;i++){
+            for(var j=0;j<finalResultNodes[i].length;j++){
+                finalResultNodes[i][j].parentClass = null;
+            }
+        }
 
-		pluck(finalResult.violations,'nodes').forEach(function(node){
-			node.forEach(function(item){
-				item.parentClass = null;
-			});
-		});
-
-		for(let i=0;i<iframeResults.length;i++){
-			let passes = iframeResults[i].passes;
-			let violations = iframeResults[i].violations;
-			let incomplete = iframeResults[i].incomplete;
-			let inapplicable = iframeResults[i].inapplicable;
-			let distinctClassName = iframeResults[i].distinctClassName;
-
+		for(var i=0;i<iframeResults.length;i++){
+			var passes = iframeResults[i].passes;
+			var violations = iframeResults[i].violations;
+			var incomplete = iframeResults[i].incomplete;
+			var inapplicable = iframeResults[i].inapplicable;
+			var distinctClassName = iframeResults[i].distinctClassName;
+            var iframeResultNodes = pluck(violations,'nodes');
 			/**
 			 * Adding parent class for iframe violations to get the correct target later
 			 */
-			pluck(violations,'nodes').forEach(function(node){
-				node.forEach(function(item){
-					item.parentClass = distinctClassName;
-				});
-			});
 
-			let existingViolationIds = pluck(finalResult.violations,'id');
-			for(let j=0;j<violations.length;j++){
+            for(var i=0;i<iframeResultNodes.length;i++){
+                for(var j=0;j<iframeResultNodes[i].length;j++){
+                    iframeResultNodes[i][j].parentClass = distinctClassName;
+                }
+            }
+
+			var existingViolationIds = pluck(finalResult.violations,'id');
+			for(var j=0;j<violations.length;j++){
 				//violations[j].parentClass = distinctClassName;
 				var index = existingViolationIds.indexOf(violations[j].id);
 				if(index >= 0){
@@ -248,20 +250,20 @@ getConsolidatedResults = function (finalResult,iframeResults,standardSelected){
 
 
 getIframeElements = function (elements){
-	var elementsClone = [];
-
-		elements.forEach(function(elem){
-			if(elem.length){
-				var child = elem.childNodes;
-				child.forEach(function(childElm){
-					if(childElm.nodeName != "#text"){
-						elementsClone.push(childElm);
-					}
-				});
-			}else{
-				elementsClone.push(elem);
-			}
-		});
+    var elementsClone = [];
+    
+    for(var i=0;i<elements.length;i++){
+        if(elem.length){
+            var child = elem.childNodes;
+            for(var j=0;j<child.length;j++){
+                if(child[j].nodeName != "#text"){
+                    elementsClone.push(child[j]);
+                }
+            }
+        }else{
+            elementsClone.push(elem);
+        }
+    }
 
 	return elementsClone;
 }
@@ -274,20 +276,18 @@ getAllIframes = function (doc,iframes,iframeIndex){
 
 
 	if(iframeInDocument.length){
-		//iframes = iframes.concat(iframeInDocument);
-
-		iframeInDocument.forEach(function(iframe,index){
-
-			if(doc == "mainDoc"){
-				iframe.parentIndex = index;
-				iframeIndex = index;
+        //iframes = iframes.concat(iframeInDocument);
+        for(var i=0;i<iframeInDocument.length;i++){
+            if(doc == "mainDoc"){
+				iframeInDocument[i].parentIndex = i;
+				iframeIndex = i;
 			}
 			else if(String(iframeIndex)){
-				iframeIndex = String(iframeIndex)+index;
+				iframeIndex = String(iframeIndex)+i;
 				iframe.parentIndex = iframeIndex;
 			}
 
-			var iframeSrc = iframe.src;
+			var iframeSrc = iframeInDocument[i].src;
 			var iframeHost = (iframeSrc=="" ? '' : iframeSrc.split('/')[2]);
 			var documentHost = window.location.host;
 
@@ -296,19 +296,19 @@ getAllIframes = function (doc,iframes,iframeIndex){
 		* security restrictions while reading iframe's document.
 		*/
 			if(iframeHost == documentHost || iframeSrc == ''){
-				iframes.push(iframe);
-				let iframeDoc = iframe.contentDocument;
+				iframes.push(iframeInDocument[i]);
+				var iframeDoc = iframeInDocument[i].contentDocument;
 
-				let iframeInIframe = getAllIframes(iframeDoc,iframes,iframeIndex);
+				var iframeInIframe = getAllIframes(iframeDoc,iframes,iframeIndex);
 				if(iframeInIframe.length){
-					iframeInIframe.forEach(function(newIframe){
-						if(iframes.indexOf(newIframe)<0){
-							iframes.push(newIframe);
+                    for(var j=0;j<iframeInIframe.length;j++){
+                        if(iframes.indexOf(iframeInIframe[j])<0){
+							iframes.push(iframeInIframe[j]);
 						}
-					});
+                    }
 				}
 			}
-		});
+        }
 	}
 
 	return iframes;
@@ -340,13 +340,13 @@ getStatusAreaHtml = function (result,standardSelected) {
     var availableStandards = ['wcag2a','wcag2aa','section508','best-practice'];
     var optionList='<option value=select>-SELECT-</option>';
 
-    availableStandards.forEach(function(standard){
-        if(standard == standardSelected){
-            optionList += '<option value='+standard+'  selected>'+standard.toUpperCase()+'</option>';
+    for(var i=0;i<availableStandards.length;i++){
+        if(availableStandards[i] == standardSelected){
+            optionList += '<option value='+availableStandards[i]+'  selected>'+availableStandards[i].toUpperCase()+'</option>';
         }else{
-            optionList += '<option value='+standard+'>'+standard.toUpperCase()+'</option>';
-        }
-    });
+            optionList += '<option value='+availableStandards[i]+'>'+availableStandards[i].toUpperCase()+'</option>';
+        } 
+    }
 
     return '<div id="" class="CernerA11Y-settings"> <div id="standards"> <select name="" id="selectStandard">'+ optionList +'</select> </div><div class="issues"> <div id="violations"> <a class="btn violationBtn"> <span class="txt"> Violations : '+violations.length+'</span> <span class="round"><i class="fa fa-chevron-right"></i></span> </a> </div><div id="passes"> <a class="btn passesBtn"> <span class="txt">Passes : '+passes.length+' </span> <span class="round"><i class="fa fa-chevron-right"></i></span> </a> </div><div id="incomplete"> <a class="btn incompleteBtn"> <span class="txt"> Incomplete : '+incomplete.length+'</span> <span class="round"><i class="fa fa-chevron-right"></i></span> </a> </div></div></div>';
 }
@@ -423,8 +423,8 @@ reRunA11AuditForUI = function (result,standardSelected){
 showResult = function () {
     var issueBtns = document.querySelectorAll('#CernerA11Y-wrapper .CernerA11Y-settings a');
 
-    issueBtns.forEach(function(btn){
-        btn.onmousedown = function (e) {
+    for(var i=0;i<issueBtns.length;i++){
+        issueBtns[i].onmousedown = function (e) {
             var issueType = e.currentTarget.parentElement.id;
 
             sessionStorage.setItem('cernerA11Y-issueType', issueType);
@@ -464,7 +464,7 @@ showResult = function () {
     
             setResultAreaEvents(issueType);
         }
-    });
+    }
 }
    /**
   * End statusScreen.js
@@ -496,10 +496,12 @@ showResult = function () {
   }
 
   onClickViolations = function (issueType){
-    var violationDiv = document.querySelectorAll('li.CernerA11Y-violation').forEach(function(violation){
-        violation.setAttribute('issueType',issueType);
-        violation.onmousedown = function(e,li){
-            var issueType = violation.getAttribute('issueType');
+    var violationDiv = document.querySelectorAll('li.CernerA11Y-violation')
+    
+    for(var i=0;i<violationDiv.length;i++){
+        violationDiv[i].setAttribute('issueType',issueType);
+        violationDiv[i].onmousedown = function(e,li){
+            var issueType = violationDiv[i].getAttribute('issueType');
             var issue = JSON.parse(sessionStorage.getItem('cernerA11YResult'))[issueType];
             var issueIndex = Number(e.currentTarget.getAttribute('index'));
             var data = issue[issueIndex];
@@ -540,7 +542,7 @@ showResult = function () {
  
             setSummaryAreaEvents(e.currentTarget, selectedIndex, issue.length);
         }
-    });
+    }
   }
    /**
   * End resultScreen.js
@@ -722,59 +724,59 @@ showResult = function () {
   onClickTarget = function (selectedIndex){
       var targetListItems = document.querySelectorAll('li.targetListItems');
   
-      targetListItems.forEach(function(target,index){
-          var issueType = sessionStorage.getItem('cernerA11Y-issueType');
-          var issue = JSON.parse(sessionStorage.getItem('cernerA11YResult'))[issueType];
-          var issueIndex = (selectedIndex-1);
-          var data = issue[issueIndex];
-          var parentClass = pluck(data.nodes,'parentClass');
-          var htmlList   = pluck(data.nodes,'html');
-  
-          target.setAttribute('html',htmlList[index]);
-          target.setAttribute('targetIndex',index);
-          if(parentClass[index]){
-              target.setAttribute('parentClass',parentClass[index]);
-          }
-          
-          target.setAttribute('target',target.innerText);
-              target.onmousedown = function(e){
-                  var targetDetailsDiv     = document.getElementById('targetLocator');
-                  var summaryAreaDetail    = document.querySelector('#CernerA11Y-wrapper.summaryArea div.CernerA11Y-summary-detail');
-                  var targetHtml           = targetDetailsDiv.querySelector('.CernerA11Y-issue-source-inner strong');
-                  var totalTargetListItems = document.querySelectorAll('li.targetListItems').length;
-                  var targetHeader         = targetDetailsDiv.querySelector('strong');
-                  var selectedTargetIndex  = Number(e.currentTarget.getAttribute('targetIndex'));
-  
-                  var previousTargetBtn = document.getElementById('CernerA11Y-button-previous-target');
-                  var nextTargetBtn     = document.getElementById('CernerA11Y-button-next-target');
-  
-                  //Update Target count with the selected target
-                  targetHeader.innerHTML = "Code Snippet : "+(selectedTargetIndex+1);
-                  previousTargetBtn.setAttribute('selectedTargetIndex',selectedTargetIndex);
-                  nextTargetBtn.setAttribute('selectedTargetIndex',selectedTargetIndex);
-  
-                  enableDisableBtn(selectedTargetIndex+1, totalTargetListItems, 'target');
-  
-                  summaryAreaDetail.style.display = "none";
-  
-  
-                  /**
-                   * Replace the Html with selected target Html
-                   */
-                  targetHtml.innerHTML = e.currentTarget.getAttribute('html').replace(/</g,'&lt; ').replace(/>/g,' &gt; ');
-  
-                  targetDetailsDiv.style.display = "block";
-                  targetDetailsDiv.scrollIntoView();
-  
-                  summaryAreaDetail.style.display = "block";
-  
-                  var locationBtn = document.querySelector('#targetLocator i.locator');
-  
-                  locationBtn.setAttribute('target',e.currentTarget.getAttribute('target'));
-                  locationBtn.setAttribute('parentClass',e.currentTarget.getAttribute('parentClass'));
-                  locationBtn.onmousedown = locateTarget;
-              }
-      });
+      for(var i=0;i<targetListItems.length;i++){
+        var issueType = sessionStorage.getItem('cernerA11Y-issueType');
+        var issue = JSON.parse(sessionStorage.getItem('cernerA11YResult'))[issueType];
+        var issueIndex = (selectedIndex-1);
+        var data = issue[issueIndex];
+        var parentClass = pluck(data.nodes,'parentClass');
+        var htmlList   = pluck(data.nodes,'html');
+
+        targetListItems[i].setAttribute('html',htmlList[i]);
+        targetListItems[i].setAttribute('targetIndex',i);
+        if(parentClass[i]){
+            targetListItems[i].setAttribute('parentClass',parentClass[i]);
+        }
+        
+        targetListItems[i].setAttribute('target',targetListItems[i].innerText);
+        targetListItems[i].onmousedown = function(e){
+                var targetDetailsDiv     = document.getElementById('targetLocator');
+                var summaryAreaDetail    = document.querySelector('#CernerA11Y-wrapper.summaryArea div.CernerA11Y-summary-detail');
+                var targetHtml           = targetDetailsDiv.querySelector('.CernerA11Y-issue-source-inner strong');
+                var totalTargetListItems = document.querySelectorAll('li.targetListItems').length;
+                var targetHeader         = targetDetailsDiv.querySelector('strong');
+                var selectedTargetIndex  = Number(e.currentTarget.getAttribute('targetIndex'));
+
+                var previousTargetBtn = document.getElementById('CernerA11Y-button-previous-target');
+                var nextTargetBtn     = document.getElementById('CernerA11Y-button-next-target');
+
+                //Update Target count with the selected target
+                targetHeader.innerHTML = "Code Snippet : "+(selectedTargetIndex+1);
+                previousTargetBtn.setAttribute('selectedTargetIndex',selectedTargetIndex);
+                nextTargetBtn.setAttribute('selectedTargetIndex',selectedTargetIndex);
+
+                enableDisableBtn(selectedTargetIndex+1, totalTargetListItems, 'target');
+
+                summaryAreaDetail.style.display = "none";
+
+
+                /**
+                 * Replace the Html with selected target Html
+                 */
+                targetHtml.innerHTML = e.currentTarget.getAttribute('html').replace(/</g,'&lt; ').replace(/>/g,' &gt; ');
+
+                targetDetailsDiv.style.display = "block";
+                targetDetailsDiv.scrollIntoView();
+
+                summaryAreaDetail.style.display = "block";
+
+                var locationBtn = document.querySelector('#targetLocator i.locator');
+
+                locationBtn.setAttribute('target',e.currentTarget.getAttribute('target'));
+                locationBtn.setAttribute('parentClass',e.currentTarget.getAttribute('parentClass'));
+                locationBtn.onmousedown = locateTarget;
+            }
+      }
   }
   
   locateTarget = function (e){
