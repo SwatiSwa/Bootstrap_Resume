@@ -193,7 +193,7 @@ testIframes = function (iframes,iframeResults){
 				axe.a11yCheck(elements,{
 					exclude: [['#CernerA11Y-wrapper']]
 					},function(res){
-						let distinctClassName = "cernera11y-iframe"+iframes[i].parentIndex;
+						var distinctClassName = "cernera11y-iframe"+iframes[i].parentIndex;
 						iframes[i].className += ((iframes[i].className!="")?(" "+distinctClassName):"");
 						res.distinctClassName = distinctClassName;
 						iframeResults.push(res);
@@ -272,7 +272,7 @@ getAllIframes = function (doc,iframes,iframeIndex){
 	iframes = iframes?iframes:[];
 
 
-	let iframeInDocument = ((doc == "mainDoc")?document.querySelectorAll('iframe'):doc.querySelectorAll('iframe'));
+	var iframeInDocument = ((doc == "mainDoc")?document.querySelectorAll('iframe'):doc.querySelectorAll('iframe'));
 
 
 	if(iframeInDocument.length){
@@ -787,7 +787,7 @@ showResult = function () {
           var indexSequence = parentClass.split('cernera11y-iframe')[1].split('');
           var iframeDoc;
       
-          for(let i=0;i<indexSequence.length;i++){
+          for(var i=0;i<indexSequence.length;i++){
               if(indexSequence.length == 1 && i==0){
                   iframeDoc = document.querySelectorAll('iframe')[Number(indexSequence[i])];
               }
