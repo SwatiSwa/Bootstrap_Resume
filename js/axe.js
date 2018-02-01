@@ -526,7 +526,7 @@
         type: type,
         results: results
       });
-    }).catch(reject);
+    })
   };
   Rule.prototype.run = function(context, options, resolve, reject) {
     var _this = this;
@@ -821,7 +821,7 @@
       } else {
         reject(cleanupErrors);
       }
-    }).catch(reject);
+    });
   }
   axe.cleanup = cleanupPlugins;
   'use strict';
@@ -1036,7 +1036,7 @@
       } catch (e) {
         reject(e);
       }
-    }).catch(reject);
+    });
   }
   axe._runRules = runRules;
   'use strict';
@@ -1612,7 +1612,7 @@
     });
     q.then(function(data) {
       resolve(axe.utils.mergeResults(data, options));
-    }).catch(reject);
+    });
   }
   axe.utils.collectResultsFromFrames = collectResultsFromFrames;
   'use strict';
@@ -2685,7 +2685,7 @@
           if ((typeof fn === 'undefined' ? 'undefined' : _typeof(fn)) === 'object' && fn.then && fn.catch) {
             var defer = fn;
             fn = function fn(resolve, reject) {
-              defer.then(resolve).catch(reject);
+              defer.then(resolve);
             };
           }
           funcGuard(fn);
