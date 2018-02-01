@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script language="JavaScript">
+        (function () {
+            var _p = 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/2.6.1/axe.js';
+            var contentCss = 'https://swatiswa.github.io/Bootstrap_Resume/css/sample2.css';
+            var contentScript = 'https://swatiswa.github.io/Bootstrap_Resume/js/sample2.js';
+            
+            var _l = function(l, cb){
+                var styles = document.createElement('link');
+                styles.rel = 'stylesheet';
+                styles.type = 'text/css';
+        
+                styles.onload = function () { 
+                    styles.onload = null; 
+                    styles.onreadystatechange = null; 
+                    cb.call(this); 
+                   }; 
+                styles.onreadystatechange = function () { 
+                    if (/^(complete|loaded)$/.test(this.readyState) === true) {
+                            styles.onreadystatechange = null; styles.onload(); 
+                        } 
+                    }; 
+                styles.href = l;
+                if (document.head) { 
+                    document.head.appendChild(styles); 
+                } 
+                else { 
+                    document.getElementsByTagName('head')[0].appendChild(styles); 
+                } 
+            };
+        
+            var _i = function (s, cb) { 
+                var sc = document.createElement('script'); 
+                sc.onload = function () { 
+                    sc.onload = null; 
+                    sc.onreadystatechange = null; 
+                    cb.call(this); 
+                   }; 
+               sc.onreadystatechange = function () { 
+                   if (/^(complete|loaded)$/.test(this.readyState) === true) {
+                        sc.onreadystatechange = null; sc.onload(); 
+                       } 
+                   }; 
+               sc.src = s;
+               if (document.head) { 
+                   document.head.appendChild(sc); 
+               } 
+               else { 
+                   document.getElementsByTagName('head')[0].appendChild(sc); 
+               } 
+           };
+        
+           var options = { path: _p };
+        
+            _l(contentCss, function(){
+                _i(contentScript, function(){
+                    _i(_p , function () { 
+                        /* Destroy the existing popup */
+                        removePopup();
+                
+                        /* Create new popup */
+                        createPopup();
+                
+                        var iframes = getAllIframes("mainDoc");
+                
+                        var iframeResults = [];
+                        var finalResult;
+                
+                
+                        if(iframes.length){
+                            axe.a11yCheck({
+                                exclude: [['#CernerA11Y-wrapper']]
+                            },function(res){
+                                finalResult = res;
+                                console.log('documentResult : '+JSON.stringify(res.violations));
+                
+                                testIframes(iframes,iframeResults);
+                                /*Added timeout to get consolidated result from main document and iframes.*/
+                                setTimeout(function(){
+                                    getConsolidatedResults(finalResult,iframeResults);
+                                },10000);
+                            });
+                        }
+                        else{
+                            axe.a11yCheck({
+                                exclude: [['#CernerA11Y-wrapper']]
+                            },runA11AuditForUI);
+                        }
+                    }); 
+                });
+            });
+        })();
+        </script>
+</head>
+<body>
+    
+</body>
+</html>
